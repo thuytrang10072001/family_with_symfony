@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Delete Customer{% endblock %}
+
+{% block body %}
+    <div class="container" style="margin-top: 5rem">
+        <h1>Delete Customer</h1>
+        <p>Are you sure you want to delete the customer "{{ customer.name }}"?</p>
+        <form method="post" action="{{ path('customer_delete', {'id': customer.id}) }}">
+            <button class="btn btn-danger">Delete</button>
+            <a href="{{ path('customer_show', {'id': customer.id}) }}" class="btn btn-secondary mt-3">Back to List</a>
+        </form>
+    </div>
+{% endblock %}

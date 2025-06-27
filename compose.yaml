@@ -1,20 +1,52 @@
 
 services:
+### PHP + Symfony ###
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - database
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+### UI Dashboard DB###
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+        - '8080:8080'
+    environment:
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+        POSTGRES_USER: ${POSTGRES_USER:-symfony}
+        POSTGRES_DB: ${POSTGRES_DB:-app}
+    depends_on:
+        - database
+    links:
+        - database:database
+
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
+    ports:
+      - '5432:5432'
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_DB: ${POSTGRES_DB:-manager_customer}
       # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123qwe}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-manager_customer}", "-U", "${POSTGRES_USER:-postgres}"]
       timeout: 5s
       retries: 5
       start_period: 60s
     volumes:
       - database_data:/var/lib/postgresql/data:rw
+      - ./init_shema:/docker-entrypoint-initdb.d:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###

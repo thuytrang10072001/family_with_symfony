@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="container" style="max-width: 330px; padding: 15px; margin-top: 5rem;">
+        <h1>Register</h1>
+
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            {# {{ form_row(registrationForm.agreeTerms) }} #}
+
+            <div class="mt-2">
+                <small>Already have an account? <a href="{{ path('app_login') }}">Login</a></small>
+                <button type="submit" class="btn btn-success">Register</button>
+            </div>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

@@ -17,8 +17,7 @@ class CustomerController extends AbstractController
     public function index(CustomerRepository $repo): Response
     {
         $customers = $repo->findAll();
-        dump($customers); // This will dump the customer data to the Symfony profiler
-
+    
         return $this->render('customer/index.html.twig',[
             'customers' => $customers,
         ]);
@@ -53,7 +52,6 @@ class CustomerController extends AbstractController
 
             $manager->flush();
 
-
             $this->addFlash('success', 'Customer created successfully!');
 
             return $this->redirectToRoute('customer_index');
@@ -74,7 +72,6 @@ class CustomerController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
     
             $manager->flush();
-
 
             $this->addFlash('success', 'Customer updated successfully!');
 

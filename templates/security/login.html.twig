@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<div class="container" style="max-width: 330px; padding: 15px; margin-top: 5rem;">
+    <form method="post" novalidate>
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="inputEmail">email</label>
+        <input type="text" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="username" required autofocus>
+        <label for="inputPassword">Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+        {# <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div> #}
+
+        <div class="text-center mt-5">
+            <button class="btn btn-primary" type="submit">
+                Sign in
+            </button>
+            <a class="btn btn-secondary ms-2" href="{{ path('app_register') }}">
+                Register
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

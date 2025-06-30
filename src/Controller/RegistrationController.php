@@ -31,10 +31,10 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            $hashPass = $userPasswordHasher->hashPassword($user, $plainPassword);
-            $user->setPassword($hashPass);
-            $this->userService->registerUser($user, true, $plainPassword);
+            // $hashPass = $userPasswordHasher->hashPassword($user, $plainPassword);
+            // $user->setPassword($hashPass);
             // $this->userService->registerUser($user, true, $plainPassword);
+            $this->userService->registerUser($user, true, $plainPassword);
 
             $this->addFlash('success', 'Registration successful! You can now log in.');
 

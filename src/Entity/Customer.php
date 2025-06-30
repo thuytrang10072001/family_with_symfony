@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -9,6 +10,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'This email is already in use.')]
+#[
+    ApiResource,
+    ApiFilter(
+        SearchFilter::class,
+        properties: [
+            'name' => SearchFilter::STRATEGY_PARTIAL,
+            'email' => SearchFilter::STRATEGY_PARTIAL,
+            'size' => SearchFilter::STRATEGY_EXACT,
+        ]
+    )
+]
 class Customer
 {
     #[ORM\Id]

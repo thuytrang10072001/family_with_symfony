@@ -40,7 +40,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function add(User $user, bool $flush = false, string $plainPassword): void
     {
         try{
-            //  $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
+             $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
 
             if (empty($user->getRoles())) {
                 $user->setRoles(['ROLE_USER']);

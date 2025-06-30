@@ -6,17 +6,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\CustomerRepository;
 use App\Form\CustomerForm;
+use App\Service\CustomerService;
 use App\Entity\Customer;
 
 class CustomerController extends AbstractController
 {
-    #[Route('/customer', name: 'customer_index')]
-    public function index(CustomerRepository $repo): Response
+    protected CustomerService $customerService;
+
+    public function __construct(CustomerService $customerService)
     {
-        $customers = $repo->findAll();
+        $this->customerService = $customerService;
+    }
+
+    #[Route('/customer', name: 'customer_index')]
+    public function index(): Response
+    {
+        $customers = $this->customerService->getAllCustomers();
     
         return $this->render('customer/index.html.twig',[
             'customers' => $customers,
@@ -24,9 +30,9 @@ class CustomerController extends AbstractController
     }
     
     #[Route('/customer/{id}', name: 'customer_show', requirements: ['id' => '\d+'])]
-    public function show(int $id, CustomerRepository $repo): Response
+    public function show(int $id): Response
     {
-        $customer = $repo->find($id);
+        $customer = $this->customerService->getCustomerById($id);
         
         if (!$customer) {
             throw $this->createNotFoundException('Customer not found');
@@ -38,7 +44,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/create', name: 'customer_create')]
-    public function create(Request $request, EntityManagerInterface $manager): Response
+    public function create(Request $request): Response
     {
         $customer = new Customer();
 
@@ -48,9 +54,7 @@ class CustomerController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
     
-            $manager->persist($customer);
-
-            $manager->flush();
+            $this->customerService->save($customer, true);
 
             $this->addFlash('success', 'Customer created successfully!');
 
@@ -63,7 +67,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/edit/{id}', name: 'customer_edit',  requirements: ['id' => '\d+'])]
-    public function edit(Customer $customer, Request $request, EntityManagerInterface $manager): Response
+    public function edit(Customer $customer, Request $request): Response
     {
         $form = $this->createForm(CustomerForm::class, $customer);
 
@@ -71,7 +75,7 @@ class CustomerController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
     
-            $manager->flush();
+            $this->customerService->save($customer, true);
 
             $this->addFlash('success', 'Customer updated successfully!');
 
@@ -84,11 +88,10 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/delete/{id}', name: 'customer_delete',  requirements: ['id' => '\d+'])]
-    public function delete(Customer $customer, Request $request, EntityManagerInterface $manager): Response
+    public function delete(Customer $customer, Request $request): Response
     {
         if ($request->isMethod('POST')) {
-            $manager->remove($customer);
-            $manager->flush();
+            $this->customerService->delete($customer, true);
 
             $this->addFlash('success', 'Customer deleted successfully!' );
 

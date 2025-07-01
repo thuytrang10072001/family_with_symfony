@@ -14,7 +14,8 @@
             You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
         <div class="mb-3">
-            <a href="{{ path('customer_index') }}">List Of Customer</a>
+            <a href="/api" class="btn btn-secondary">List API</a>
+            <a href="{{ path('customer_index') }}" class="btn btn-success">List Of Customer</a>
         </div>
     {% else %}
         <div class="mb-3">

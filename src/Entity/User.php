@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -12,6 +15,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_email', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ApiResource(
+    security: "is_granted('ROLE_USER')",
+    operations: [
+        new Get(
+            security: "is_granted('ROLE_USER') and object.owner == user",
+            securityMessage: "Sorry, you are not allowed to access this resource.",
+        ),
+        new Post(
+            security: "is_granted('ROLE_ADMIN')",
+            securityMessage: "Sorry, you are not allowed to add the users.",
+        )
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -69,7 +85,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 

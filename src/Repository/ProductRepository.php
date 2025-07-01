@@ -16,6 +16,23 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function getAllOrdersByProductId(int $productId): array
+    {
+         $product = $this->find($productId);
+         if (!$product) {
+             return [];
+         }
+
+         return $product->getOrders()->toArray();
+//        return $this->createQueryBuilder('p')
+//            ->leftJoin('p.orders', 'o')
+//            ->addSelect('o')
+//            ->andWhere('p.id = :productId')
+//            ->setParameter('productId', $productId)
+//            ->getQuery()
+//            ->getResult();
+    }
+
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

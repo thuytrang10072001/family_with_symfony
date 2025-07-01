@@ -16,5 +16,17 @@ services:
     App\:
         resource: '../src/'
 
+    App\State\ProductProvider:
+        arguments:
+            $productService: '@App\Service\ProductService'
+        tags:
+            - { name: 'api_platform.state_provider' }
+
+    App\State\OrderProvider:
+        arguments:
+            $orderService: '@App\Service\OrderService'
+        tags:
+            - { name: 'api_platform.state_provider' }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

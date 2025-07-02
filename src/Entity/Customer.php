@@ -104,8 +104,8 @@ class Customer
         return $this;
     }
 
-    // public function getOrders(): Collection
-    // {
-    //     return $this->orders;
-    // }
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
 }

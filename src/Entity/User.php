@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,13 +20,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
     security: "is_granted('ROLE_USER')",
     operations: [
         new Get(
-            security: "is_granted('ROLE_USER') and object.owner == user",
+            security: "object == user",
             securityMessage: "Sorry, you are not allowed to access this resource.",
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')",
             securityMessage: "Sorry, you are not allowed to add the users.",
-        )
+        ),
+        new GetCollection(
+            security: "is_granted('ROLE_ADMIN')",
+            securityMessage: "Sorry, you are not allowed to access this resource.",
+        ),
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -84,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 

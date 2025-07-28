@@ -11,7 +11,7 @@ services:
       - "8000:80"
     depends_on:
       - database
-    extra_hosts:
+    extra_hosts: 
       - "host.docker.internal:host-gateway"
 
 ### UI Dashboard DB###
@@ -39,6 +39,7 @@ services:
       # You should definitely change the password in production
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123qwe}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      MESSENGER_REDIS_DSN: redis://redis:6379
     healthcheck:
       test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-manager_customer}", "-U", "${POSTGRES_USER:-postgres}"]
       timeout: 5s
@@ -50,6 +51,13 @@ services:
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###
+
+### Redis ###
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
 
 volumes:
 ###> doctrine/doctrine-bundle ###

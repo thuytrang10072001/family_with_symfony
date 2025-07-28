@@ -15,6 +15,6 @@ class UserService
 
     public function registerUser($user, $flush, $plainPassword)
     {
-        $this->userRepository->add($user, $flush, $plainPassword);
+        $this->userRepository->add($user, $plainPassword, $flush);
     }
 }

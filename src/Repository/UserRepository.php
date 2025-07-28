@@ -37,7 +37,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function add(User $user, bool $flush = false, string $plainPassword): void
+    public function add(User $user, string $plainPassword, bool $flush = false, ): void
     {
         try{
              $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));

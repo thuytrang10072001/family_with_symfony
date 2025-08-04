@@ -59,6 +59,17 @@ services:
     ports:
       - "6379:6379"
 
+  messenger_worker:
+    build:
+      context: .
+    depends_on:
+      - redis
+    command: php bin/console messenger:consume async --sleep=2
+    volumes:
+      - .:/var/www/html
+    networks:
+      - your_app_network
+
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
